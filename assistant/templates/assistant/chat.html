@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Assistant Chat</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        body {
+            background: #050510;
+            min-height: 100vh;
+            color: #fff;
+        }
+        .center-visual {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 70vh;
+        }
+        #glowCanvas {
+            display: block;
+            margin: 0 auto 24px auto;
+            background: transparent;
+        }
+        .prompt-text {
+            text-align: center;
+            font-size: 1.3em;
+            margin-bottom: 24px;
+            font-family: 'Poppins', sans-serif;
+            letter-spacing: 1px;
+            color: #b3b3ff;
+            text-shadow: 0 0 12px #1a1aff;
+        }
+        .input-bar {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(20,20,40,0.8);
+            border-radius: 32px;
+            box-shadow: 0 0 24px #1a1aff;
+            padding: 10px 24px;
+            width: 420px;
+            margin: 0 auto;
+            position: relative;
+        }
+        .input-bar textarea {
+            background: rgba(20,20,40,0.95);
+            border: none;
+            color: #fff;
+            font-size: 1.2em;
+            flex: 1;
+            outline: none;
+            resize: none;
+            padding: 12px 18px;
+            margin-right: 12px;
+            font-family: 'Poppins', sans-serif;
+            border-radius: 18px;
+            box-shadow: 0 0 24px #1a1aff;
+            animation: inputGlow 2s infinite alternate;
+        }
+        @keyframes inputGlow {
+            from { box-shadow: 0 0 8px #1a1aff; }
+            to { box-shadow: 0 0 24px #1a1aff; }
+        }
+        .input-bar button, .input-bar .icon-btn {
+            background: none;
+            border: none;
+            color: #b3b3ff;
+            font-size: 1.7em;
+            margin-left: 8px;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+        .input-bar button:hover, .input-bar .icon-btn:hover {
+            color: #fff;
+            text-shadow: 0 0 8px #1a1aff;
+        }
+        .input-bar .icon-btn.active {
+            color: #1a1aff;
+            text-shadow: 0 0 16px #1a1aff;
+        }
+        .chat-box {
+            display: none;
+        }
+        .chat-box {
+            max-width: 600px;
+            margin: 40px auto;
+            background: transparent;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: none;
+        }
+        .ai-msg .msg-bubble {
+            background: linear-gradient(90deg, #1a1aff 0%, #6e8efb 100%);
+            color: #fff;
+            border-radius: 32px;
+            box-shadow: 0 0 48px #1a1aff, 0 0 24px #6e8efb;
+            animation: fadeInUp 0.7s, aiGlow 2s infinite alternate;
+            padding: 18px 48px;
+            font-size: 1.25em;
+            margin-bottom: 18px;
+            max-width: 700px;
+            min-width: 350px;
+            word-break: break-word;
+            display: inline-block;
+        }
+        @keyframes aiGlow {
+            from { box-shadow: 0 0 8px #1a1aff; }
+            to { box-shadow: 0 0 32px #6e8efb; }
+        }
+        .user-msg .msg-bubble {
+            background: linear-gradient(90deg, #6e8efb 0%, #a777e3 100%);
+            color: #fff;
+            border-radius: 24px;
+            box-shadow: 0 0 16px #a777e3;
+            animation: fadeInUp 0.7s;
+            padding: 18px 48px;
+            font-size: 1.15em;
+            max-width: 700px;
+            min-width: 350px;
+            display: inline-block;
+        }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .chat-box {
+            display: none;
+        }{
+        /* Remove .animated-textarea styles to avoid conflict */
+            animation: pulse 2s infinite;
+        }
+        .animated-textarea:focus {
+            box-shadow: 0 0 24px #a777e3;
+            background: linear-gradient(90deg, #e0c3fc 0%, #f3f6fd 100%);
+            border-color: #6e8efb;
+        }
+        @keyframes pulse {
+            0% { box-shadow: 0 0 8px #a777e3; }
+            50% { box-shadow: 0 0 24px #a777e3; }
+            100% { box-shadow: 0 0 8px #a777e3; }
+        }
+        .animated-mic {
+            animation: micGlow 1.5s infinite alternate;
+        }
+        @keyframes micGlow {
+            from { box-shadow: 0 0 8px #6e8efb; }
+            to { box-shadow: 0 0 24px #a777e3; }
+        }
+        </style>
+</head>
+<body>
+    <div class="center-visual">
+        <canvas id="glowCanvas" width="320" height="320"></canvas>
+        <div class="prompt-text">Ask me anything</div>
+        <form id="chatForm" autocomplete="off">
+            <div class="input-bar">
+                <textarea id="userInput" placeholder="Type here ..." rows="1"></textarea>
+                <button type="submit" title="Send"><i class="bi bi-arrow-up-circle"></i></button>
+                <button type="button" id="micBtn" class="icon-btn" title="Speak"><i class="bi bi-mic"></i></button>
+                <button type="button" id="settingsBtn" class="icon-btn" title="Settings"><i class="bi bi-gear"></i></button>
+            </div>
+        </form>
+        <div id="chatBox" class="chat-box mb-3"></div>
+    </div>
+    <script>
+        // Glowing ring and particle animation
+        const canvas = document.getElementById('glowCanvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+        function createParticles() {
+            particles = [];
+            for (let i = 0; i < 120; i++) {
+                const angle = Math.random() * 2 * Math.PI;
+                const radius = 80 + Math.random() * 40;
+                particles.push({
+                    x: 160 + Math.cos(angle) * radius,
+                    y: 160 + Math.sin(angle) * radius,
+                    r: 1.5 + Math.random() * 2,
+                    a: angle,
+                    speed: 0.01 + Math.random() * 0.02
+                });
+            }
+        }
+        function drawGlow() {
+            ctx.clearRect(0, 0, 320, 320);
+            // Outer glow
+            ctx.save();
+            ctx.beginPath();
+            ctx.arc(160, 160, 120, 0, 2 * Math.PI);
+            ctx.shadowColor = '#1a1aff';
+            ctx.shadowBlur = 40;
+            ctx.strokeStyle = 'rgba(26,26,255,0.5)';
+            ctx.lineWidth = 18;
+            ctx.stroke();
+            ctx.restore();
+            // Inner particles
+            for (let p of particles) {
+                ctx.save();
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.r, 0, 2 * Math.PI);
+                ctx.fillStyle = '#1a1aff';
+                ctx.globalAlpha = 0.7;
+                ctx.shadowColor = '#1a1aff';
+                ctx.shadowBlur = 8;
+                ctx.fill();
+                ctx.restore();
+            }
+        }
+        function animateGlow() {
+            for (let p of particles) {
+                p.a += p.speed;
+                const radius = 80 + Math.random() * 40;
+                p.x = 160 + Math.cos(p.a) * radius;
+                p.y = 160 + Math.sin(p.a) * radius;
+            }
+            drawGlow();
+            requestAnimationFrame(animateGlow);
+        }
+        createParticles();
+        animateGlow();
+        // Voice assistant logic
+        const micBtn = document.getElementById('micBtn');
+        let recognition;
+        if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            recognition = new SpeechRecognition();
+            recognition.lang = 'en-IN'; // Use Indian English accent for better recognition
+            recognition.continuous = false;
+            recognition.interimResults = false;
+            micBtn.style.display = 'inline-block';
+        } else {
+            micBtn.style.display = 'none';
+        }
+
+        if (recognition) {
+            let micActive = false;
+            micBtn.addEventListener('click', () => {
+                if (!micActive) {
+                    recognition.continuous = true;
+                    recognition.start();
+                    micBtn.classList.add('active');
+                    micActive = true;
+                } else {
+                    recognition.stop();
+                    micBtn.classList.remove('active');
+                    micActive = false;
+                }
+            });
+            recognition.onresult = (event) => {
+                const transcript = event.results[0][0].transcript;
+                userInput.value = transcript;
+                chatForm.dispatchEvent(new Event('submit'));
+                // Clear input after submission to avoid repeat
+                setTimeout(() => { userInput.value = ''; }, 200);
+            };
+            recognition.onend = () => {
+                if (micActive) {
+                    recognition.start(); // Restart for continuous listening
+                } else {
+                    micBtn.classList.remove('active');
+                }
+            };
+        }
+        const chatBox = document.getElementById('chatBox');
+        const chatForm = document.getElementById('chatForm');
+        const userInput = document.getElementById('userInput');
+
+        // CSRF token helper
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+        const csrftoken = getCookie('csrftoken');
+
+        chatForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const msg = userInput.value;
+            if (msg.trim() === '') return;
+            appendMessage('user', msg);
+            userInput.value = '';
+            // If user asks to close the tab, do it
+            if (/close\s+the\s+tab/i.test(msg)) {
+                setTimeout(() => { window.close(); }, 1000);
+                appendMessage('ai', "Lexi says: Closing the tab...");
+                return;
+            }
+            // Send message to backend
+            fetch('/assistant/api/response/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'X-CSRFToken': csrftoken,
+                },
+                body: `message=${encodeURIComponent(msg)}`
+            })
+            .then(response => response.json())
+            .then(data => {
+                appendMessage('ai', data.response);
+                // Voice output
+                let restartRecognition = () => {
+                    if (typeof micActive !== 'undefined' && micActive && recognition) {
+                        setTimeout(() => { recognition.start(); }, 500);
+                    }
+                };
+                if ('speechSynthesis' in window) {
+                    let text = data.response.replace(/Lexi/g, '<phoneme alphabet="ipa" ph="lɛksi">Lexi</phoneme>');
+                    const utter = new SpeechSynthesisUtterance();
+                    utter.lang = 'en-US';
+                    if ('speechSynthesis' in window && 'onvoiceschanged' in window.speechSynthesis) {
+                        utter.text = text;
+                    } else {
+                        utter.text = data.response.replace(/Lexi/g, 'Lex-ee');
+                    }
+                    utter.onend = restartRecognition;
+                    window.speechSynthesis.speak(utter);
+                } else {
+                    restartRecognition();
+                }
+            })
+            .catch(() => {
+                appendMessage('ai', 'Error: Could not get AI response.');
+            });
+        });
+
+        function appendMessage(sender, text) {
+            // Show chat box if hidden
+            chatBox.style.display = 'block';
+            const div = document.createElement('div');
+            div.className = sender === 'user' ? 'user-msg mb-2' : 'ai-msg mb-2';
+            let name = sender === 'user' ? '<i class="bi bi-person-circle"></i> You' : '<i class="bi bi-robot"></i> Lexi';
+            div.innerHTML = `<div class="msg-bubble"><span style="font-size:0.9em;font-weight:600;">${name}</span><br>${text.replace(/\n/g,'<br>')}</div>`;
+            chatBox.appendChild(div);
+            // Always scroll to latest answer (instant and smooth)
+            chatBox.scrollTop = chatBox.scrollHeight;
+            setTimeout(() => {
+                chatBox.scrollTo({ top: chatBox.scrollHeight, behavior: 'smooth' });
+            }, 100);
+        }
+    </script>
+</body>
+</html>

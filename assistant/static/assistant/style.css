@@ -1,0 +1,5 @@
+/* Custom styles for AI Assistant chat */
+.chat-container { max-width: 600px; margin: 40px auto; }
+.chat-box { height: 400px; overflow-y: auto; background: #fff; border-radius: 8px; padding: 20px; }
+.user-msg { text-align: right; }
+.ai-msg { text-align: left; }
