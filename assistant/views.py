@@ -62,6 +62,8 @@ def ai_response(request):
                 response = "Your younger sister's name is Siku, Her full name is Swikruti Roy and you call her Puchu."
             elif 'django trainer' in msg:
                 response = "Your Django trainer is Mr. Shaik Harshad Vali Sir."
+            elif 'jeepsita' in msg or 'jiki' in msg:
+                response='jeepsita is your childhood friend. she is also your sister and also your classmate . she is doing her job in a mnc. now she went to visit her sisters home who is staying in bangalore. '
             elif 'python trainer' in msg:
                 response = "Your Python trainer is Mr. Pranay Kumar Sir."
             elif 'who is atul' in msg:
@@ -85,7 +87,7 @@ def ai_response(request):
             elif 'who is shreya' in msg:
                 response = "Shreya Banarjee is Amit's girlfriend and a close friend."
             elif 'who is ashutosh' in msg or 'who is ashu' in msg:
-                response = "Ashutosh Khilar, also known as Ashu, is your creator and mentor."
+                response = "Ashutosh Khilar, also known as Ashu, is My creator and mentor."
             elif 'who is happy' in msg:
                 response = "Happy is your sister, always bringing joy to your life."
             elif 'who is siku' in msg or 'who is puchu' in msg:
@@ -141,6 +143,12 @@ def ai_response(request):
                 response = "Shah Rukh Khan is popularly known as the King of Bollywood."
             elif 'iron man of india' in msg:
                 response = "Sardar Vallabhbhai Patel is known as the Iron Man of India."
+            elif 'father of nation' in msg:
+                response = "Mahatma Gandhi is known as the Father of the Nation in India."
+            elif 'mother of nation' in msg:
+                response = "Sarojini Naidu is often referred to as the Mother of the Nation in India."
+            elif 'ratan' in msg or 'ratan sir' in msg or 'interviewer' in msg:
+                response="ratan is your interviewer. who is taking your interview right now.his full name is ratan kumar jena. he is the manager of the akarshika it consulting ."
             elif 'president of usa' in msg:
                 response = "As of 2025, the President of USA is Joe Biden."
             elif 'president of russia' in msg:
@@ -151,7 +159,7 @@ def ai_response(request):
             elif 'what is my fathers name' in msg or 'my father name' in msg:
                 response = "Your father's name is Mr. Gopabandhu Khilar. Whom you love very much. But never tell him."
             # ...inside ai_response, before the final else:...
-            elif any(op in msg for op in ['sum', 'add', 'plus', 'subtract', 'minus', 'multiply', 'product', 'divide', 'division']):
+            elif any(op in msg for op in ['sum', 'add', 'plus', 'subtract', 'minus', 'multiply','multiplication', 'product', 'divide', 'division']):
                 import re
                 numbers = [float(n) for n in re.findall(r'-?\d+(?:\.\d+)?', msg)]
                 if len(numbers) >= 2:
@@ -161,7 +169,7 @@ def ai_response(request):
                     elif 'subtract' in msg or 'minus' in msg:
                         result = numbers[0] - numbers[1]
                         response = f"The result of subtraction is {result}."
-                    elif 'multiply' in msg or 'product' in msg:
+                    elif 'multiply' in msg or 'product' in msg or 'multiplication' in msg:
                         result = numbers[0] * numbers[1]
                         response = f"The product is {result}."
                     elif 'divide' in msg or 'division' in msg:
