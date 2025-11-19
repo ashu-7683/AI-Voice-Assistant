@@ -78,7 +78,7 @@ def ai_response(request):
                 response = "AI Engineer is the most suitable role for you among Python Fullstack Developer, Business Analyst, AI Engineer, and Data Scientist."
             elif 'where am i staying' in msg or 'where i am staying' in msg or 'current location' in msg:
                 response = "You are staying in Marathahalli, Bengaluru."
-            elif 'tell me something about yourself' in msg:
+            elif 'tell me something about yourself' in msg or 'about yourself' in msg or 'who are you' in msg:
                 response = "Hey there, I’m Lexi! I was created by Mr. Ashu, who I proudly call my boss. He built me to help with questions, solve problems, and make things easier for you. Think of me as a smart, friendly companion — always here to support Ashu’s vision."
             elif 'who is niki' in msg or 'nikki' in msg:
                 response = "Niki is your best friend,Her full name is Ashalipsa kar.she is a cute,beautiful and sweet girl .who is always supportive and fun to be around."
@@ -147,18 +147,14 @@ def ai_response(request):
                 response = "Mahatma Gandhi is known as the Father of the Nation in India."
             elif 'mother of nation' in msg:
                 response = "Sarojini Naidu is often referred to as the Mother of the Nation in India."
-            elif 'ratan' in msg or 'ratan sir' in msg or 'interviewer' in msg:
-                response="ratan is your interviewer. who is taking your interview right now.his full name is ratan kumar jena. he is the manager of the akarshika it consulting ."
             elif 'president of usa' in msg:
                 response = "As of 2025, the President of USA is Joe Biden."
             elif 'president of russia' in msg:
                 response = "As of 2025, the President of Russia is Vladimir Putin."
-# ...existing code...            elif 'president of china' in msg:
             elif 'president of china' in msg:
                 response = "As of 2025, the President of China is Xi Jinping."
             elif 'what is my fathers name' in msg or 'my father name' in msg:
                 response = "Your father's name is Mr. Gopabandhu Khilar. Whom you love very much. But never tell him."
-            # ...inside ai_response, before the final else:...
             elif any(op in msg for op in ['sum', 'add', 'plus', 'subtract', 'minus', 'multiply','multiplication', 'product', 'divide', 'division']):
                 import re
                 numbers = [float(n) for n in re.findall(r'-?\d+(?:\.\d+)?', msg)]
