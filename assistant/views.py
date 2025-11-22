@@ -151,6 +151,10 @@ def ai_response(request):
                 response = "As of 2025, the President of USA is Joe Biden."
             elif 'president of russia' in msg:
                 response = "As of 2025, the President of Russia is Vladimir Putin."
+            elif 'ceo of google' in msg:
+                response = "As of 2025, the CEO of Google is Sundar Pichai."
+            elif 'ceo of microsoft' in msg:
+                response = "As of 2025, the CEO of Microsoft is Satya Nadella."
             elif 'president of china' in msg:
                 response = "As of 2025, the President of China is Xi Jinping."
             elif 'what is my fathers name' in msg or 'my father name' in msg:
