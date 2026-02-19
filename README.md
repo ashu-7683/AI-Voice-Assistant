@@ -1,2 +1,2 @@
-AI Voice & Chat Assistant
+AI Voice & Chat Assistant -- Lexi
 
