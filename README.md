@@ -1,2 +1,2 @@
-AI Voice & 
+AI Voice & Chat
 
